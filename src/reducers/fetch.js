@@ -7,7 +7,7 @@ export function fetch(state = {}, action) {
       return Object.assign({}, state, { error: action.error });
 
     case 'FETCH_CONTENT_SUCCESS':
-      return Object.assign({}, state, { content: action.payload });
+      return Object.assign({}, state, { content: action.payload, index: action.index });
 
     case 'FETCH_CONTENT_FAILURE':
       return Object.assign({}, state, { error: action.error });

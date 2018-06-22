@@ -21,10 +21,11 @@ export const fetchContentFailure = (error) => {
   }
 }
 
-export const fetchContentSuccess = (content) => {
+export const fetchContentSuccess = (content, index) => {
   return {
     type: 'FETCH_CONTENT_SUCCESS',
     payload: content,
+    index,
   }
 }
 
@@ -38,12 +39,12 @@ export function fetchCategories() {
   }
 }
 
-export function fetchContent(category) {
+export function fetchContent(category, index) {
   return dispatch => {
     const url = `${config.apiURL}/random?category=${category}`
     return fetch(url)
       .then(response => response.json())
-      .then(content => dispatch(fetchContentSuccess(content)))
+      .then(content => dispatch(fetchContentSuccess(content, index)))
       .catch(error => dispatch(fetchContentFailure(error)))
   }
 }
