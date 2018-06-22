@@ -1,31 +1,49 @@
 import config from '../config';
 
-export function fetchSuccess(results) {
+export const fetchCategoryFailure = (error) => {
   return {
-    type: 'FETCH_SUCCESS',
-    results,
-  }
-}
-
-export function fetchFailure(error) {
-  return {
-    type: 'FETCH_SUCCESS',
+    type: 'FETCH_CATEGORY_FAILURE',
     error,
   }
 }
-export function fetchCategories() {
-  console.log('I AM ALSO CALLED');
-  const url = config.apiURL;
-  console.log(process.env.REACT_APP_CHUCK_API_URL);
 
+export const fetchCategorySuccess = (results) => {
+  return {
+    type: 'FETCH_CATEGORY_SUCCESS',
+    payload: results,
+  }
+}
+
+export const fetchContentFailure = (error) => {
+  return {
+    type: 'FETCH_CONTENT_FAILURE',
+    error,
+  }
+}
+
+export const fetchContentSuccess = (content) => {
+  return {
+    type: 'FETCH_CONTENT_SUCCESS',
+    payload: content,
+  }
+}
+
+export function fetchCategories() {
   return dispatch => {
-    console.log('AND NOW?');
-    // const url = config.apiURL;
-    // return {
-    //   fetch(url)
-    //   .then((response) => response.json)
-    //   .then((categories) => dispatch(fetchSuccess(categories)))
-    //   .catch((error) => dispatch(fetchFailure(error)));
-    // };
+    const url = `${config.apiURL}/categories`;
+    return fetch(url)
+      .then((response) => response.json())
+      .then(categories => dispatch(fetchCategorySuccess(categories)))
+      .catch((error) => dispatch(fetchCategoryFailure(error)));
+  }
+}
+
+export function fetchContent(category) {
+  return dispatch => {
+    const url = `${config.apiURL}/random?category=${category}`
+    return fetch(url)
+      .then(response => response.json())
+      .then(content => dispatch(fetchContentSuccess(content)))
+      .catch(error => dispatch(fetchContentFailure(error)))
   }
 }
