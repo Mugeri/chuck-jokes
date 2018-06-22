@@ -1,5 +1,8 @@
 import { combineReducers } from 'redux';
-import fetchReducers from './fetchReducers';
-export default combineReducers({
- fetchReducers
+import { fetch } from './fetch';
+
+const rootReducer = combineReducers({
+  fetch,
 });
+
+export default rootReducer;
