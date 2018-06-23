@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
+import { Image, Panel, PanelGroup } from 'react-bootstrap';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Panel, PanelGroup, Glyphicon } from 'react-bootstrap';
+import chevronDown from '../assets/chevron-down.svg';
+import chevronUp from '../assets/chevron-up.svg';
 import * as fetch from '../actions/fetch';
-import logo from '../assets/logo.svg';
 import '../css/App.css';
 
 class App extends Component {
@@ -13,9 +14,6 @@ class App extends Component {
     this.state = {
       activeKey: null,
     };
-
-    this.handleSelect = this.handleSelect.bind(this);
-    this.panelToExpand = this.panelToExpand.bind(this);
   }
 
   componentDidMount() {
@@ -26,64 +24,101 @@ class App extends Component {
     this.setState({ activeKey });
   }
 
-  panelToExpand = (category) => {
-    const content = this.props.content ? this.props.content.value : null;
+// This is necessary for the first expansion of a category accordion.
+  handleTitleClick = (category, index) => {
+    this.handleSelect(index);
+    this.props.fetchContent(category, index);
+  }
+
+  handlePanelExpansion = (category) => {
     const cat = this.props.categories;
     const index = this.props.index;
     if (cat[index] === category) {
-      return (<p> {this.props.content.value} </p>);
+      return (
+        <p>
+          {this.props.content.value}
+        </p>
+      );
     }
     return null;
   }
-  onCategories = () => {
-    return this.props.categories.map((category, index) => {
-      return  (
-          <Panel className="Panel-primary" eventKey={index} onClick={() => this.props.fetchContent(category, index)}>
-            <Panel.Heading className="Panel-heading">
-              <Glyphicon glyph="chevron-up" />
-              <Panel.Title className="Panel-title" toggle>{category}</Panel.Title>
-            </Panel.Heading>
-            <Panel.Body className="Panel-body" collapsible>
-            { this.props.content && this.panelToExpand(category) }
-            </Panel.Body>
-          </Panel>
-        );
-      });
-    }
+
+  onCategorySelect = () => {
+    const {
+      categories,
+      content,
+      isLoading,
+    } = this.props;
+
+    const {
+      activeKey,
+    } = this.state;
+
+    return categories.map((category, index) => (
+      <Panel className="Panel-primary" eventKey={index}>
+        <Panel.Heading className="Panel-heading">
+          <Panel.Title
+            className="Panel-title"
+            onClick={() => this.handleTitleClick(category, index)}
+          >
+            <a>
+              {isLoading && activeKey === index ? 'loading...' : category}
+            </a>
+          </Panel.Title>
+          <Panel.Toggle className="Panel-toggle">
+            {activeKey !== index ? <Image src={chevronDown} responsive />
+              : <Image src={chevronUp} responsive />}
+          </Panel.Toggle>
+        </Panel.Heading>
+        <Panel.Collapse>
+          <Panel.Body className="Panel-body" collapsible>
+            { activeKey === index && content && this.handlePanelExpansion(category) }
+          </Panel.Body>
+        </Panel.Collapse>
+      </Panel>
+    ));
+  }
 
   render() {
+    const {
+      activeKey,
+    } = this.state;
+    const {
+      categories,
+    } = this.props;
     return (
       <div className="App">
         <header className="App-header">
-        <img
-        className="App-logo"
-        src='https://assets.chucknorris.host/img/chucknorris_logo_coloured_small@2x.png'
-        />
-          <h1 className="App-title">CHUCK NORRIS JOKES</h1>
+          <Image
+            className="App-logo"
+            src="https://assets.chucknorris.host/img/chucknorris_logo_coloured_small@2x.png"
+          />
+          <h1 className="App-title">
+            CHUCK NORRIS JOKES
+          </h1>
         </header>
         <PanelGroup
+          id="jokes-categories"
           accordion
           className="Panel-group"
-          activeKey={this.state.activeKey}
+          activeKey={activeKey}
           onSelect={this.handleSelect}
         >
-        {this.props.categories && this.onCategories()}
+          {categories && this.onCategorySelect()}
         </PanelGroup>
       </div>
     );
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    categories: state.fetch.categories,
-    content: state.fetch.content,
-    index: state.fetch.index,
-  };
-};
+const mapStateToProps = state => ({
+  categories: state.fetch.categories,
+  content: state.fetch.content,
+  index: state.fetch.index,
+  isLoading: state.fetch.isLoading,
+});
 
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators(fetch, dispatch);
-};
+
+const mapDispatchToProps = dispatch => bindActionCreators(fetch, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

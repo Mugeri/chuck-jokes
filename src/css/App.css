@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  padding: 5%;
 }
 
 .App-logo {
@@ -23,7 +24,7 @@
 }
 
 .Panel-group {
-  width: 50%;
+  width: 100%;
   display: inline-block;
   height: 100vh;
   overflow-y: scroll;
@@ -37,18 +38,34 @@
 }
 
 .Panel-heading {
+  border-bottom: solid;
+  border-width: thin;
+  border-radius: 2px;
+  border-color: black;
+  display: flex;
+  justify-content: space-between;
   -ms-align-items: center;
   align-items: center;
   height: 8%;
-  background-color: lightblue;
+  background-color: lightgray;
+  /* padding: 2%; */
 }
 
-.Panel-title.a {
-  text-decoration: none;
+.Panel-title {
+  width: 90vw;
+  border-right: solid;
+  border-width: thin;
+  border-color: black;
+  padding: 2%;
+}
+
+.Panel-toggle {
+  width: 10vw;
+  padding: 2%;
 }
 
 .Panel-body {
-  padding: 1%;
+  padding: 0 1%;
 }
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
