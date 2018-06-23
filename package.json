@@ -14,7 +14,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
+    "test": "yarn eslint && react-scripts test --env=jsdom",
     "eslint": "./node_modules/.bin/eslint ./ --quiet --ignore-path .gitignore",
     "eject": "react-scripts eject"
   },
