@@ -62,7 +62,8 @@ class App extends Component {
             onClick={() => this.handleTitleClick(category, index)}
           >
             <a>
-              {isLoading && activeKey === index ? 'loading...' : category}
+              {isLoading && activeKey === index ? 'loading...' 
+               : category.charAt(0).toUpperCase() + category.slice(1)}
             </a>
           </Panel.Title>
           <Panel.Toggle className="Panel-toggle">
